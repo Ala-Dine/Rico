@@ -25,7 +25,8 @@ class EditProfileViewModel @Inject constructor(
 
     private fun loadProfile() {
         viewModelScope.launch {
-            getUserProfileUseCase().take(1).collect { profile ->
+            getUserProfileUseCase().take(1).collect { profileOrNull ->
+                val profile = profileOrNull ?: UserProfile()
                 _uiState.update { it.copy(
                     name = profile.name,
                     birthdate = profile.birthdate,

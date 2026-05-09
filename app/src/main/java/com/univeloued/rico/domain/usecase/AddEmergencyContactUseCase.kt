@@ -7,7 +7,7 @@ import javax.inject.Inject
 class AddEmergencyContactUseCase @Inject constructor(
     private val repository: EmergencyContactRepository
 ) {
-    operator fun invoke(contact: EmergencyContact) {
+    suspend operator fun invoke(contact: EmergencyContact) {
         repository.addEmergencyContact(contact)
     }
 }

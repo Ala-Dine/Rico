@@ -1,6 +1,11 @@
 package com.univeloued.rico.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "reminders")
 data class Reminder(
+    @PrimaryKey
     val id: String,
     val medicineName: String,
     val unit: String,
