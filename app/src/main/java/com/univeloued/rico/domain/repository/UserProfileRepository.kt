@@ -1,9 +1,9 @@
 package com.univeloued.rico.domain.repository
 
 import com.univeloued.rico.data.model.UserProfile
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface UserProfileRepository {
-    val userProfile: StateFlow<UserProfile>
-    fun updateUserProfile(profile: UserProfile)
+    fun getUserProfile(): Flow<UserProfile?>
+    suspend fun updateUserProfile(profile: UserProfile)
 }

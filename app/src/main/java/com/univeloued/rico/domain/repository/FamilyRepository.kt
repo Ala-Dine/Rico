@@ -1,9 +1,10 @@
 package com.univeloued.rico.domain.repository
 
 import com.univeloued.rico.data.model.FamilyMember
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface FamilyRepository {
-    val familyMembers: StateFlow<List<FamilyMember>>
-    fun addFamilyMember(member: FamilyMember)
+    fun getFamilyMembers(): Flow<List<FamilyMember>>
+    suspend fun addFamilyMember(member: FamilyMember)
+    suspend fun deleteFamilyMember(member: FamilyMember)
 }

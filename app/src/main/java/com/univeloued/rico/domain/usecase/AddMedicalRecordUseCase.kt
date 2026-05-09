@@ -7,7 +7,7 @@ import javax.inject.Inject
 class AddMedicalRecordUseCase @Inject constructor(
     private val repository: MedicalRecordRepository
 ) {
-    operator fun invoke(record: MedicalRecord) {
-        repository.addRecord(record)
+    suspend operator fun invoke(record: MedicalRecord) {
+        repository.addMedicalRecord(record)
     }
 }

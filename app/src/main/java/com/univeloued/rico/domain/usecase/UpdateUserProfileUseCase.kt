@@ -7,7 +7,7 @@ import javax.inject.Inject
 class UpdateUserProfileUseCase @Inject constructor(
     private val repository: UserProfileRepository
 ) {
-    operator fun invoke(profile: UserProfile) {
+    suspend operator fun invoke(profile: UserProfile) {
         repository.updateUserProfile(profile)
     }
 }

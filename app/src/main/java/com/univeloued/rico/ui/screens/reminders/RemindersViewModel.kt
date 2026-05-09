@@ -39,8 +39,10 @@ class RemindersViewModel @Inject constructor(
                 // Implement delete use case if available
             }
             is RemindersUiAction.ToggleReminder -> {
-                val updatedReminder = action.reminder.copy(isActive = !action.reminder.isActive)
-                updateReminderUseCase(updatedReminder)
+                viewModelScope.launch {
+                    val updatedReminder = action.reminder.copy(isActive = !action.reminder.isActive)
+                    updateReminderUseCase(updatedReminder)
+                }
             }
         }
     }

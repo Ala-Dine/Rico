@@ -7,7 +7,7 @@ import javax.inject.Inject
 class AddFamilyMemberUseCase @Inject constructor(
     private val repository: FamilyRepository
 ) {
-    operator fun invoke(member: FamilyMember) {
+    suspend operator fun invoke(member: FamilyMember) {
         repository.addFamilyMember(member)
     }
 }

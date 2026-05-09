@@ -2,6 +2,7 @@ package com.univeloued.rico.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.univeloued.rico.data.model.UserProfile
 import com.univeloued.rico.domain.usecase.GetUserProfileUseCase
 import com.univeloued.rico.domain.usecase.UpdateUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,7 @@ class ProfileViewModel @Inject constructor(
             getUserProfileUseCase()
                 .onStart { _uiState.update { it.copy(isLoading = true) } }
                 .collect { profile ->
-                    _uiState.update { it.copy(userProfile = profile, isLoading = false) }
+                    _uiState.update { it.copy(userProfile = profile ?: UserProfile(), isLoading = false) }
                 }
         }
     }

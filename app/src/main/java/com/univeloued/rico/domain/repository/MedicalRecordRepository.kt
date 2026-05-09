@@ -1,9 +1,10 @@
 package com.univeloued.rico.domain.repository
 
 import com.univeloued.rico.data.model.MedicalRecord
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
 interface MedicalRecordRepository {
-    val records: StateFlow<List<MedicalRecord>>
-    fun addRecord(record: MedicalRecord)
+    fun getMedicalRecords(): Flow<List<MedicalRecord>>
+    suspend fun addMedicalRecord(record: MedicalRecord)
+    suspend fun deleteMedicalRecord(record: MedicalRecord)
 }

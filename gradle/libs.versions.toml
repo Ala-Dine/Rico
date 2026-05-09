@@ -10,20 +10,17 @@ kotlin = "2.2.10"
 composeBom = "2025.07.00"
 hilt = "2.59.2"
 hiltNavigationCompose = "1.2.0"
-ksp = "2.3.6"
 coil = "2.6.0"
-roomKtx = "2.6.1"
-room_version = "2.6.1"
+room = "2.8.4"
 materialIconsExtended = "1.6.8"
 appcompat = "1.6.1"
 material = "1.10.0"
-#ksp = "2.0.21-1.0.27"
+ksp = "2.2.10-2.0.2"
 
 [libraries]
-#room
-androidx-room-ktx ={module = "androidx.room:room-ktx", version.ref = "roomKtx"}
-roomdb = {module = "androidx.room:room-runtime", version.ref = "room_version"}
-roomdbcompiler = {module = "androidx.room:room-compiler", version.ref = "room_version"}
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 #material
 material-icons-extended = {module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended"}
