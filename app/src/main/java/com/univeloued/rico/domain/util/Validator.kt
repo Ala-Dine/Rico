@@ -29,4 +29,13 @@ object Validator {
         }
         return ValidationResult.Success
     }
+
+    fun <T> validateRequired(value: T?, fieldName: String): ValidationResult {
+        val isValid = when (value) {
+            null -> false
+            is String -> value.isNotBlank()
+            else -> true
+        }
+        return if (isValid) ValidationResult.Success else ValidationResult.Error("$fieldName is required")
+    }
 }

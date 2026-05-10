@@ -1,7 +1,6 @@
 package com.univeloued.rico
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
@@ -15,24 +14,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.univeloued.rico.data.security.CryptoManager
+import com.univeloued.rico.data.security.DatabasePassphraseManager
+import com.univeloued.rico.data.security.KeyStoreManager
 import com.univeloued.rico.ui.navigation.BottomNavItem
 import com.univeloued.rico.ui.navigation.RicoNavGraph
 import com.univeloued.rico.ui.navigation.Screen
+import com.univeloued.rico.ui.security.AuthScreen
+import com.univeloued.rico.ui.security.SecurityViewModel
 import com.univeloued.rico.ui.theme.RicoTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
+    
+    @Inject
+    lateinit var keyStoreManager: KeyStoreManager
+    @Inject
+    lateinit var cryptoManager: CryptoManager
+    @Inject
+    lateinit var databasePassphraseManager: DatabasePassphraseManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             RicoTheme {
-                RicoApp()
+                val viewModel: SecurityViewModel = viewModel()
+                val isAuthenticated by viewModel.isAuthenticated.collectAsState()
+
+                if (isAuthenticated) {
+                    RicoApp()
+                } else {
+                    AuthScreen(
+                        keyStoreManager = keyStoreManager,
+                        cryptoManager = cryptoManager,
+                        databasePassphraseManager = databasePassphraseManager,
+                    ) { passphrase ->
+                        databasePassphraseManager.setUnlockedDatabasePassphrase(passphrase)
+                        viewModel.setAuthenticated(authenticated = true)
+                    }
+                }
             }
         }
     }
@@ -54,7 +83,7 @@ fun RicoApp() {
             if (showBottomBar) {
                 NavigationBar(
                     containerColor = Color.White,
-                    tonalElevation = 8.dp
+                    tonalElevation = 8.dp,
                 ) {
                     bottomBarScreens.forEach { item ->
                         val isSelected = currentDestination?.hierarchy?.any { it.route == item.route } == true
@@ -72,13 +101,13 @@ fun RicoApp() {
                             icon = {
                                 Icon(
                                     imageVector = if (isSelected) item.filledIcon else item.outlinedIcon,
-                                    contentDescription = item.label
+                                    contentDescription = item.label,
                                 )
                             },
                             label = {
                                 Text(
                                     text = item.label,
-                                    fontSize = 10.sp
+                                    fontSize = 10.sp,
                                 )
                             },
                             colors = NavigationBarItemDefaults.colors(
@@ -86,8 +115,8 @@ fun RicoApp() {
                                 selectedTextColor = Color(0xFF00897B),
                                 unselectedIconColor = Color.Gray,
                                 unselectedTextColor = Color.Gray,
-                                indicatorColor = Color.Transparent
-                            )
+                                indicatorColor = Color.Transparent,
+                            ),
                         )
                     }
                 }
@@ -101,13 +130,13 @@ fun RicoApp() {
                     containerColor = Color(0xFF00897B),
                     contentColor = Color.White,
                     shape = CircleShape,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Add Record")
                 }
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.End,
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             RicoNavGraph(navController = navController)

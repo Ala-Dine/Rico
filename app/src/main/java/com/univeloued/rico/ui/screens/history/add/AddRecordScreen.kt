@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.univeloued.rico.domain.model.RecordType
 import com.univeloued.rico.ui.components.RicoTextField
 import java.text.SimpleDateFormat
 import java.util.*
@@ -75,7 +76,7 @@ fun AddRecordScreen(
 
     val isFormValid = uiState.fileName.isNotBlank() &&
             uiState.recordFor.isNotBlank() &&
-            uiState.recordType.isNotBlank() &&
+            uiState.recordType != null &&
             uiState.createdOn.isNotBlank() &&
             uiState.selectedFileUri != null
 
@@ -187,7 +188,7 @@ fun AddRecordScreen(
                 color = Color(0xFF102828)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            val recordTypes = listOf("Visits", "Rx", "Labs")
+            val recordTypes = RecordType.entries.filter { it != RecordType.ALL }
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -196,7 +197,7 @@ fun AddRecordScreen(
                     FilterChip(
                         selected = isSelected,
                         onClick = { viewModel.onAction(AddRecordUiAction.UpdateRecordType(type)) },
-                        label = { Text(type) },
+                        label = { Text(type.displayName) },
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFF00897B),
                             selectedLabelColor = Color.White

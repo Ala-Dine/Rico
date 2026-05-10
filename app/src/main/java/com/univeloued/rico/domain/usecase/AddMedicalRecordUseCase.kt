@@ -10,18 +10,10 @@ class AddMedicalRecordUseCase @Inject constructor(
     private val repository: MedicalRecordRepository
 ) {
     suspend operator fun invoke(record: MedicalRecord): ValidationResult {
-        val nameResult = Validator.validateRequiredField(record.fileName, "File Name")
-        if (nameResult is ValidationResult.Error) return nameResult
-
-        val forResult = Validator.validateRequiredField(record.recordFor, "Patient Name")
-        if (forResult is ValidationResult.Error) return forResult
-
-        val typeResult = Validator.validateRequiredField(record.recordType, "Record Type")
-        if (typeResult is ValidationResult.Error) return typeResult
-
-        if (record.fileUri.isNullOrBlank()) {
-            return ValidationResult.Error("Please select a file")
-        }
+        Validator.validateRequired(record.fileName, "File Name").let { if (it is ValidationResult.Error) return it }
+        Validator.validateRequired(record.recordFor, "Patient Name").let { if (it is ValidationResult.Error) return it }
+        Validator.validateRequired(record.recordType, "Record Type").let { if (it is ValidationResult.Error) return it }
+        Validator.validateRequired(record.fileUri, "File").let { if (it is ValidationResult.Error) return it }
 
         repository.addMedicalRecord(record)
         return ValidationResult.Success
