@@ -1,6 +1,5 @@
 package com.univeloued.rico.data.repository
 
-import android.net.Uri
 import com.univeloued.rico.data.local.dao.MedicalRecordDao
 import com.univeloued.rico.data.mapper.toDomain
 import com.univeloued.rico.data.mapper.toEntity
@@ -26,14 +25,21 @@ class MedicalRecordRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addMedicalRecord(record: MedicalRecord) {
-        val internalUri = record.fileUri?.let { uriString ->
-            fileHelper.saveFileToInternalStorage(Uri.parse(uriString), "medical_records")
-        } ?: record.fileUri
+        val internalFileUri = record.fileUri?.let { uriString ->
+            if (uriString.startsWith("content://")) {
+                fileHelper.saveFileToInternalStorage(android.net.Uri.parse(uriString), "medical_records")
+            } else {
+                uriString
+            }
+        }
 
         val recordToInsert = if (record.id.isEmpty()) {
-            record.copy(id = UUID.randomUUID().toString(), fileUri = internalUri)
+            record.copy(
+                id = UUID.randomUUID().toString(),
+                fileUri = internalFileUri
+            )
         } else {
-            record.copy(fileUri = internalUri)
+            record.copy(fileUri = internalFileUri ?: record.fileUri)
         }
         medicalRecordDao.insertMedicalRecord(recordToInsert.toEntity())
     }

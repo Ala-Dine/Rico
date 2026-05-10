@@ -1,5 +1,6 @@
 package com.univeloued.rico.data.local.entity
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -11,5 +12,5 @@ data class MedicalRecordEntity(
     val recordFor: String,
     val recordType: String,
     val createdOn: String,
-    val fileUri: String? = null
+    val fileUri: Uri? = null
 )
