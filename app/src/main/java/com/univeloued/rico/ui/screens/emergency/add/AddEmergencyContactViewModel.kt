@@ -2,8 +2,9 @@ package com.univeloued.rico.ui.screens.emergency.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.univeloued.rico.data.model.EmergencyContact
+import com.univeloued.rico.domain.model.EmergencyContact
 import com.univeloued.rico.domain.usecase.AddEmergencyContactUseCase
+import com.univeloued.rico.domain.util.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,10 +43,8 @@ class AddEmergencyContactViewModel @Inject constructor(
 
     private fun saveContact() {
         val state = _uiState.value
-        if (state.name.isBlank() || state.phone.isBlank() || state.email.isBlank()) return
-
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
+            _uiState.update { it.copy(isSaving = true, error = null) }
             val contact = EmergencyContact(
                 id = "",
                 name = state.name,
@@ -53,8 +52,14 @@ class AddEmergencyContactViewModel @Inject constructor(
                 email = state.email,
                 photoUri = state.photoUri
             )
-            addEmergencyContactUseCase(contact)
-            _uiState.update { it.copy(isSaving = false, isSaved = true) }
+            when (val result = addEmergencyContactUseCase(contact)) {
+                is ValidationResult.Error -> {
+                    _uiState.update { it.copy(isSaving = false, error = result.message) }
+                }
+                ValidationResult.Success -> {
+                    _uiState.update { it.copy(isSaving = false, isSaved = true) }
+                }
+            }
         }
     }
 }

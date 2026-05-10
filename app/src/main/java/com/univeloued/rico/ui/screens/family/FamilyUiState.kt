@@ -1,6 +1,6 @@
 package com.univeloued.rico.ui.screens.family
 
-import com.univeloued.rico.data.model.FamilyMember
+import com.univeloued.rico.domain.model.FamilyMember
 
 data class FamilyUiState(
     val familyMembers: List<FamilyMember> = emptyList(),

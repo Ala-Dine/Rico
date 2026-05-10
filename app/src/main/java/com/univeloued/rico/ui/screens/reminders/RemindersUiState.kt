@@ -1,6 +1,6 @@
 package com.univeloued.rico.ui.screens.reminders
 
-import com.univeloued.rico.data.model.Reminder
+import com.univeloued.rico.domain.model.Reminder
 
 data class RemindersUiState(
     val reminders: List<Reminder> = emptyList(),

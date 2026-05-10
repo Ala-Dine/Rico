@@ -1,23 +1,23 @@
 package com.univeloued.rico.data.local.dao
 
 import androidx.room.*
-import com.univeloued.rico.data.model.EmergencyContact
+import com.univeloued.rico.data.local.entity.EmergencyContactEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EmergencyContactDao {
     @Query("SELECT * FROM emergency_contacts")
-    fun getAllContacts(): Flow<List<EmergencyContact>>
+    fun getAllContacts(): Flow<List<EmergencyContactEntity>>
 
     @Query("SELECT * FROM emergency_contacts WHERE id = :id")
-    suspend fun getContactById(id: String): EmergencyContact?
+    suspend fun getContactById(id: String): EmergencyContactEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertContact(contact: EmergencyContact)
+    suspend fun insertContact(contact: EmergencyContactEntity)
 
     @Update
-    suspend fun updateContact(contact: EmergencyContact)
+    suspend fun updateContact(contact: EmergencyContactEntity)
 
     @Delete
-    suspend fun deleteContact(contact: EmergencyContact)
+    suspend fun deleteContact(contact: EmergencyContactEntity)
 }

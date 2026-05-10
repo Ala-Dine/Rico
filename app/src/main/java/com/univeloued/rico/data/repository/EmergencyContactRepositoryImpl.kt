@@ -1,9 +1,12 @@
 package com.univeloued.rico.data.repository
 
 import com.univeloued.rico.data.local.dao.EmergencyContactDao
-import com.univeloued.rico.data.model.EmergencyContact
+import com.univeloued.rico.data.mapper.toDomain
+import com.univeloued.rico.data.mapper.toEntity
+import com.univeloued.rico.domain.model.EmergencyContact
 import com.univeloued.rico.domain.repository.EmergencyContactRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +17,9 @@ class EmergencyContactRepositoryImpl @Inject constructor(
 ) : EmergencyContactRepository {
 
     override fun getEmergencyContacts(): Flow<List<EmergencyContact>> {
-        return emergencyContactDao.getAllContacts()
+        return emergencyContactDao.getAllContacts().map { entities ->
+            entities.map { it.toDomain() }
+        }
     }
 
     override suspend fun addEmergencyContact(contact: EmergencyContact) {
@@ -23,10 +28,10 @@ class EmergencyContactRepositoryImpl @Inject constructor(
         } else {
             contact
         }
-        emergencyContactDao.insertContact(contactToInsert)
+        emergencyContactDao.insertContact(contactToInsert.toEntity())
     }
 
     override suspend fun deleteEmergencyContact(contact: EmergencyContact) {
-        emergencyContactDao.deleteContact(contact)
+        emergencyContactDao.deleteContact(contact.toEntity())
     }
 }

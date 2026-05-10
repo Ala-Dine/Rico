@@ -2,8 +2,9 @@ package com.univeloued.rico.ui.screens.reminders.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.univeloued.rico.data.model.Reminder
+import com.univeloued.rico.domain.model.Reminder
 import com.univeloued.rico.domain.usecase.AddReminderUseCase
+import com.univeloued.rico.domain.util.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,10 +49,8 @@ class AddReminderViewModel @Inject constructor(
 
     private fun saveReminder() {
         val state = _uiState.value
-        if (state.medicineName.isBlank() || state.unit.isBlank()) return
-
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
+            _uiState.update { it.copy(isSaving = true, error = null) }
             val reminder = Reminder(
                 id = "",
                 medicineName = state.medicineName,
@@ -61,8 +60,14 @@ class AddReminderViewModel @Inject constructor(
                 duration = state.duration,
                 intakeMethod = state.intakeMethod
             )
-            addReminderUseCase(reminder)
-            _uiState.update { it.copy(isSaving = false, isSaved = true) }
+            when (val result = addReminderUseCase(reminder)) {
+                is ValidationResult.Error -> {
+                    _uiState.update { it.copy(isSaving = false, error = result.message) }
+                }
+                ValidationResult.Success -> {
+                    _uiState.update { it.copy(isSaving = false, isSaved = true) }
+                }
+            }
         }
     }
 }

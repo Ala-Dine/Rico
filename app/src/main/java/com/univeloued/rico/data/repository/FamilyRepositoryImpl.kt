@@ -1,9 +1,12 @@
 package com.univeloued.rico.data.repository
 
 import com.univeloued.rico.data.local.dao.FamilyMemberDao
-import com.univeloued.rico.data.model.FamilyMember
+import com.univeloued.rico.data.mapper.toDomain
+import com.univeloued.rico.data.mapper.toEntity
+import com.univeloued.rico.domain.model.FamilyMember
 import com.univeloued.rico.domain.repository.FamilyRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +17,9 @@ class FamilyRepositoryImpl @Inject constructor(
 ) : FamilyRepository {
 
     override fun getFamilyMembers(): Flow<List<FamilyMember>> {
-        return familyMemberDao.getAllFamilyMembers()
+        return familyMemberDao.getAllFamilyMembers().map { entities ->
+            entities.map { it.toDomain() }
+        }
     }
 
     override suspend fun addFamilyMember(member: FamilyMember) {
@@ -23,10 +28,10 @@ class FamilyRepositoryImpl @Inject constructor(
         } else {
             member
         }
-        familyMemberDao.insertFamilyMember(memberToInsert)
+        familyMemberDao.insertFamilyMember(memberToInsert.toEntity())
     }
 
     override suspend fun deleteFamilyMember(member: FamilyMember) {
-        familyMemberDao.deleteFamilyMember(member)
+        familyMemberDao.deleteFamilyMember(member.toEntity())
     }
 }

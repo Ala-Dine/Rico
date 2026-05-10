@@ -9,5 +9,6 @@ data class AddRecordUiState(
     val createdOn: String = "",
     val selectedFileUri: Uri? = null,
     val isSaving: Boolean = false,
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val error: String? = null
 )

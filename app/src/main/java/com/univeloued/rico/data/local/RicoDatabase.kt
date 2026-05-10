@@ -4,17 +4,17 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.univeloued.rico.data.local.dao.*
-import com.univeloued.rico.data.model.*
+import com.univeloued.rico.data.local.entity.*
 
 @Database(
     entities = [
-        EmergencyContact::class,
-        FamilyMember::class,
-        MedicalRecord::class,
-        Reminder::class,
-        UserProfile::class
+        EmergencyContactEntity::class,
+        FamilyMemberEntity::class,
+        MedicalRecordEntity::class,
+        ReminderEntity::class,
+        UserProfileEntity::class
     ],
-    version = 1,
+    version = 2, // Increment version because of entity name changes/structure
     exportSchema = false
 )
 @TypeConverters(Converters::class)

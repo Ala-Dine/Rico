@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import com.univeloued.rico.domain.model.MedicalRecord
+
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val getMedicalRecordsUseCase: GetMedicalRecordsUseCase
@@ -58,7 +60,7 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    private fun filterRecords(records: List<com.univeloued.rico.data.model.MedicalRecord>, filter: String, query: String): List<com.univeloued.rico.data.model.MedicalRecord> {
+    private fun filterRecords(records: List<MedicalRecord>, filter: String, query: String): List<MedicalRecord> {
         return records.filter { record ->
             val matchesSearch = record.fileName.contains(query, ignoreCase = true) || 
                                record.recordFor.contains(query, ignoreCase = true)

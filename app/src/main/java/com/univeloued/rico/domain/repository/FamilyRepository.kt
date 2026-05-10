@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.repository
 
-import com.univeloued.rico.data.model.FamilyMember
+import com.univeloued.rico.domain.model.FamilyMember
 import kotlinx.coroutines.flow.Flow
 
 interface FamilyRepository {

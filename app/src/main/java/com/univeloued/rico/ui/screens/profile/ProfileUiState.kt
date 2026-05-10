@@ -1,6 +1,6 @@
 package com.univeloued.rico.ui.screens.profile
 
-import com.univeloued.rico.data.model.UserProfile
+import com.univeloued.rico.domain.model.UserProfile
 
 data class ProfileUiState(
     val userProfile: UserProfile = UserProfile(),

@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.univeloued.rico.data.model.Reminder
+import com.univeloued.rico.domain.model.Reminder
 
 @Composable
 fun RemindersScreen(

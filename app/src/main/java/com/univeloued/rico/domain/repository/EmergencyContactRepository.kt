@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.repository
 
-import com.univeloued.rico.data.model.EmergencyContact
+import com.univeloued.rico.domain.model.EmergencyContact
 import kotlinx.coroutines.flow.Flow
 
 interface EmergencyContactRepository {

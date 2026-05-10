@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.usecase
 
-import com.univeloued.rico.data.model.UserProfile
+import com.univeloued.rico.domain.model.UserProfile
 import com.univeloued.rico.domain.repository.UserProfileRepository
 import javax.inject.Inject
 

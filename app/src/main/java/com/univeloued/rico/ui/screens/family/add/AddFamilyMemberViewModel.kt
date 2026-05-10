@@ -2,7 +2,7 @@ package com.univeloued.rico.ui.screens.family.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.univeloued.rico.data.model.FamilyMember
+import com.univeloued.rico.domain.model.FamilyMember
 import com.univeloued.rico.domain.usecase.AddFamilyMemberUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

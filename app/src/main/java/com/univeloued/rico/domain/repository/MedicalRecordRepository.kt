@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.repository
 
-import com.univeloued.rico.data.model.MedicalRecord
+import com.univeloued.rico.domain.model.MedicalRecord
 import kotlinx.coroutines.flow.Flow
 
 interface MedicalRecordRepository {

@@ -2,7 +2,7 @@ package com.univeloued.rico.ui.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.univeloued.rico.data.model.UserProfile
+import com.univeloued.rico.domain.model.UserProfile
 import com.univeloued.rico.domain.usecase.GetUserProfileUseCase
 import com.univeloued.rico.domain.usecase.UpdateUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

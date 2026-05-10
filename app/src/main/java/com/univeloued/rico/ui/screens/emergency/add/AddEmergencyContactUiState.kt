@@ -6,5 +6,6 @@ data class AddEmergencyContactUiState(
     val email: String = "",
     val photoUri: String? = null,
     val isSaving: Boolean = false,
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val error: String? = null
 )

@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.usecase
 
-import com.univeloued.rico.data.model.Reminder
+import com.univeloued.rico.domain.model.Reminder
 import com.univeloued.rico.domain.repository.ReminderRepository
 import javax.inject.Inject
 

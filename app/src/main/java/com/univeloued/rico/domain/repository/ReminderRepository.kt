@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.repository
 
-import com.univeloued.rico.data.model.Reminder
+import com.univeloued.rico.domain.model.Reminder
 import kotlinx.coroutines.flow.Flow
 
 interface ReminderRepository {

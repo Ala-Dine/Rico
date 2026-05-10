@@ -2,8 +2,9 @@ package com.univeloued.rico.ui.screens.history.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.univeloued.rico.data.model.MedicalRecord
+import com.univeloued.rico.domain.model.MedicalRecord
 import com.univeloued.rico.domain.usecase.AddMedicalRecordUseCase
+import com.univeloued.rico.domain.util.ValidationResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,25 +46,25 @@ class AddRecordViewModel @Inject constructor(
 
     private fun saveRecord() {
         val state = _uiState.value
-        if (state.fileName.isBlank() || 
-            state.recordFor.isBlank() || 
-            state.recordType.isBlank() ||
-            state.createdOn.isBlank() || 
-            state.selectedFileUri == null
-        ) return
-
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
+            _uiState.update { it.copy(isSaving = true, error = null) }
             val record = MedicalRecord(
                 id = "",
                 fileName = state.fileName,
                 recordFor = state.recordFor,
                 recordType = state.recordType,
                 createdOn = state.createdOn,
-                fileUri = state.selectedFileUri
+                fileUri = state.selectedFileUri.toString()
             )
-            addMedicalRecordUseCase(record)
-            _uiState.update { it.copy(isSaving = false, isSaved = true) }
+            
+            when (val result = addMedicalRecordUseCase(record)) {
+                is ValidationResult.Error -> {
+                    _uiState.update { it.copy(isSaving = false, error = result.message) }
+                }
+                ValidationResult.Success -> {
+                    _uiState.update { it.copy(isSaving = false, isSaved = true) }
+                }
+            }
         }
     }
 }

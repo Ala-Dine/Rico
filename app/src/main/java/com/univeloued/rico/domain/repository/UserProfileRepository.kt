@@ -1,6 +1,6 @@
 package com.univeloued.rico.domain.repository
 
-import com.univeloued.rico.data.model.UserProfile
+import com.univeloued.rico.domain.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
 interface UserProfileRepository {

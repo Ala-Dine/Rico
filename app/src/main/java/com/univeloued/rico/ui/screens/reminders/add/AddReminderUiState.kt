@@ -8,5 +8,6 @@ data class AddReminderUiState(
     val duration: String = "5 days",
     val intakeMethod: String = "Before meal",
     val isSaving: Boolean = false,
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val error: String? = null
 )

@@ -1,6 +1,6 @@
 package com.univeloued.rico.ui.screens.emergency
 
-import com.univeloued.rico.data.model.EmergencyContact
+import com.univeloued.rico.domain.model.EmergencyContact
 
 data class EmergencyUiState(
     val contacts: List<EmergencyContact> = emptyList(),
