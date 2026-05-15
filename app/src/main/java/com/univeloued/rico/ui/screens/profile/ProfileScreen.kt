@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Assignment
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
@@ -23,12 +25,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.univeloued.rico.ui.components.ProfileActionButton
 import com.univeloued.rico.ui.components.ProfileImageWithAdd
+import com.univeloued.rico.ui.security.LocalSecurityViewModel
+import com.univeloued.rico.ui.security.SupabaseAuthViewModel
 
 @Composable
 fun ProfileScreen(
     onEditClick: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    authViewModel: SupabaseAuthViewModel = hiltViewModel()
 ) {
+    val securityViewModel = LocalSecurityViewModel.current
     val uiState by viewModel.uiState.collectAsState()
     val profile = uiState.userProfile
 
@@ -46,14 +52,16 @@ fun ProfileScreen(
     ) {
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Profile Header with Image Picker
         Box(
             modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
             ProfileImageWithAdd(
                 photoUri = profile.photoUri,
-                onClick = { photoPickerLauncher.launch("image/*") }
+                onClick = { 
+                    securityViewModel.setIgnoreNextStop(true)
+                    photoPickerLauncher.launch("image/*") 
+                }
             )
         }
 
@@ -102,6 +110,19 @@ fun ProfileScreen(
             ProfileActionButton(
                 icon = Icons.Outlined.Delete,
                 label = "DEL."
+            )
+            ProfileActionButton(
+                icon = Icons.Default.Sync,
+                label = "SYNC",
+                onClick = { viewModel.onAction(ProfileUiAction.TriggerSync) }
+            )
+            ProfileActionButton(
+                icon = Icons.AutoMirrored.Outlined.ExitToApp,
+                label = "LOGOUT",
+                onClick = { 
+                    securityViewModel.setAuthenticated(false)
+                    authViewModel.onSignOut() 
+                }
             )
         }
     }

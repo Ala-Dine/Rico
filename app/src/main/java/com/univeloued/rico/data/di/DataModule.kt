@@ -1,7 +1,11 @@
 package com.univeloued.rico.data.di
 
 import com.univeloued.rico.data.repository.*
+import com.univeloued.rico.data.security.AESEncryptionService
+import com.univeloued.rico.data.sync.SyncManagerImpl
 import com.univeloued.rico.domain.repository.*
+import com.univeloued.rico.domain.security.EncryptionService
+import com.univeloued.rico.domain.sync.SyncManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -41,4 +45,22 @@ abstract class DataModule {
     abstract fun bindUserProfileRepository(
         userProfileRepositoryImpl: UserProfileRepositoryImpl
     ): UserProfileRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindEncryptionService(
+        aesEncryptionService: AESEncryptionService
+    ): EncryptionService
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSyncManager(
+        syncManagerImpl: SyncManagerImpl
+    ): SyncManager
 }

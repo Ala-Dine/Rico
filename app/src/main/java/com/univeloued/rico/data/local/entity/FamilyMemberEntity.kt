@@ -7,9 +7,12 @@ import androidx.room.PrimaryKey
 data class FamilyMemberEntity(
     @PrimaryKey
     val id: String,
+    val userId: String = "",
     val name: String,
     val relationship: String,
     val birthdate: String,
     val gender: String,
-    val photoUri: String? = null
+    val photoUri: String? = null,
+    val isSynced: Boolean = false,
+    val lastUpdated: Long = System.currentTimeMillis()
 )

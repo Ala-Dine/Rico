@@ -14,12 +14,12 @@ class ReminderReceiver : BroadcastReceiver() {
     lateinit var notificationHelper: NotificationHelper
 
     override fun onReceive(context: Context, intent: Intent) {
-        val medicineName = intent.getStringExtra("MEDICINE_NAME") ?: "Medicine"
-        val intakeMethod = intent.getStringExtra("INTAKE_METHOD") ?: ""
+        val medicineName = intent.getStringExtra("medicine_name") ?: "Medicine"
+        val intakeMethod = intent.getStringExtra("intake_method") ?: ""
         
         notificationHelper.showNotification(
             title = "Time for your medicine!",
-            message = "Don't forget to take $medicineName $intakeMethod"
+            message = "Please take your $medicineName ($intakeMethod)"
         )
     }
 }

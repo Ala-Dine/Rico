@@ -24,6 +24,8 @@ sealed class Screen(val route: String) {
     data object AddReminder : Screen("add_reminder")
     data object AddFamilyMember : Screen("add_family_member")
     data object AddEmergencyContact : Screen("add_emergency_contact")
+    data object Search : Screen("search")
+    data object Login : Screen("login")
 }
 
 enum class BottomNavItem(

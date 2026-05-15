@@ -9,5 +9,7 @@ data class HistoryUiState(
     val selectedFilter: RecordType = RecordType.ALL,
     val searchQuery: String = "",
     val isLoading: Boolean = false,
+    val isSyncing: Boolean = false,
+    val lastSynced: String? = null,
     val error: String? = null
 )

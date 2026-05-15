@@ -9,7 +9,6 @@ import com.univeloued.rico.data.util.AlarmHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +24,7 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             CoroutineScope(Dispatchers.IO).launch {
-                val reminders = reminderDao.getAllReminders().first()
+                val reminders = reminderDao.getAllRemindersSync()
                 reminders.forEach { entity ->
                     val domain = entity.toDomain()
                     if (domain.isActive) {

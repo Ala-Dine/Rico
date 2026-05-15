@@ -12,7 +12,8 @@ fun MedicalRecordEntity.toDomain(): MedicalRecord {
         recordFor = recordFor,
         recordType = RecordType.fromString(recordType),
         createdOn = createdOn,
-        fileUri = fileUri?.toString()
+        fileUri = fileUri?.toString(),
+        isSynced = isSynced
     )
 }
 
@@ -23,6 +24,7 @@ fun MedicalRecord.toEntity(): MedicalRecordEntity {
         recordFor = recordFor,
         recordType = recordType.displayName,
         createdOn = createdOn,
-        fileUri = fileUri?.let { Uri.parse(it) }
+        fileUri = fileUri?.let { Uri.parse(it) },
+        isSynced = isSynced
     )
 }

@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.univeloued.rico.data.local.RicoDatabase
 import com.univeloued.rico.data.local.dao.*
 import com.univeloued.rico.data.security.DatabasePassphraseManager
+import com.univeloued.rico.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,20 +29,46 @@ object DatabaseModule {
         System.loadLibrary("sqlcipher")
 
         val passphrase = databasePassphraseManager.getDatabasePassphrase()
-
         val hook = object : SQLiteDatabaseHook {
             override fun preKey(connection: SQLiteConnection?) {}
             override fun postKey(connection: SQLiteConnection?) {
                 connection?.executeRaw("PRAGMA cipher_migrate;", null, null)
             }
         }
-
         val factory = SupportOpenHelperFactory(passphrase, hook, false)
+
+        // Try to open the database to check for corruption/wrong key
+        // We only delete if we are SURE it's not an authentication error
+        try {
+            val dbFile = context.getDatabasePath(Constants.DATABASE_NAME)
+            if (dbFile.exists()) {
+                net.zetetic.database.sqlcipher.SQLiteDatabase.openDatabase(
+                    dbFile.absolutePath,
+                    passphrase,
+                    null,
+                    net.zetetic.database.sqlcipher.SQLiteDatabase.OPEN_READONLY,
+                    hook
+                ).close()
+            }
+        } catch (e: Exception) {
+            val errorMsg = e.message ?: ""
+            // Code 7 is "Out of Memory", which in SQLCipher usually means "Wrong Password"
+            if (errorMsg.contains("file is not a database") || 
+                errorMsg.contains("corrupt") || 
+                errorMsg.contains("out of memory") ||
+                errorMsg.contains("code 7")
+            ) {
+                android.util.Log.e("DatabaseModule", "Database key mismatch or corruption. Resetting local cache.", e)
+                context.deleteDatabase(Constants.DATABASE_NAME)
+            } else {
+                android.util.Log.w("DatabaseModule", "Database busy or auth required. Skipping validation.")
+            }
+        }
 
         return Room.databaseBuilder(
             context,
             RicoDatabase::class.java,
-            "rico_database"
+            Constants.DATABASE_NAME
         )
             .openHelperFactory(factory)
             .fallbackToDestructiveMigration()

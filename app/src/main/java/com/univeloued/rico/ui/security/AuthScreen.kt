@@ -40,11 +40,21 @@ fun AuthScreen(
                             val decrypted = cryptoManager.decryptWithCipher(cipher, encryptedInfo.first)
                             onAuthenticated(decrypted)
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Decryption failed: ${e.message}", Toast.LENGTH_LONG).show()
+                            android.util.Log.e("AuthScreen", "Biometric decryption failed, falling back to manual derivation", e)
+                            // Fallback: Try to get the database passphrase normally
+                            try {
+                                onAuthenticated(databasePassphraseManager.getDatabasePassphrase())
+                            } catch (e2: Exception) {
+                                Toast.makeText(context, "Unlock failed. Please sign out and in again.", Toast.LENGTH_LONG).show()
+                            }
                         }
                     } else {
                         // Initial setup or fallback
-                        onAuthenticated(databasePassphraseManager.getDatabasePassphrase())
+                        try {
+                            onAuthenticated(databasePassphraseManager.getDatabasePassphrase())
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Critical: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
 
@@ -57,8 +67,8 @@ fun AuthScreen(
 
     val promptInfo = remember {
         BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Secure Login")
-            .setSubtitle("Authenticate to unlock your database")
+            .setTitle("Secure Vault")
+            .setSubtitle("Enter PIN or use Biometrics to derive your Master Key")
             .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
             .build()
     }
@@ -76,6 +86,17 @@ fun AuthScreen(
         } catch (e: Exception) {
             e.printStackTrace()
             null
+        }
+    }
+
+    // Auto-launch biometric prompt if available
+    LaunchedEffect(cryptoObject) {
+        if (cryptoObject != null) {
+            try {
+                biometricPrompt.authenticate(promptInfo, cryptoObject)
+            } catch (e: Exception) {
+                android.util.Log.e("AuthScreen", "Auto-auth failed: ${e.message}")
+            }
         }
     }
 

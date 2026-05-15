@@ -15,7 +15,8 @@ fun UserProfileEntity.toDomain(): UserProfile {
         phone = phone,
         email = email,
         notes = notes,
-        photoUri = photoUri
+        photoUri = photoUri,
+        encryptionSalt = encryptionSalt
     )
 }
 
@@ -31,6 +32,7 @@ fun UserProfile.toEntity(): UserProfileEntity {
         phone = phone,
         email = email,
         notes = notes,
-        photoUri = photoUri
+        photoUri = photoUri,
+        encryptionSalt = encryptionSalt
     )
 }
