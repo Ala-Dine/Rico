@@ -6,5 +6,6 @@ data class MedicalRecord(
     val recordFor: String,
     val recordType: RecordType,
     val createdOn: String,
-    val fileUri: String? = null
+    val fileUri: String? = null,
+    val isSynced: Boolean = false
 )

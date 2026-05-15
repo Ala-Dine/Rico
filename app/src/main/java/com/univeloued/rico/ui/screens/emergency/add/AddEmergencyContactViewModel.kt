@@ -1,10 +1,11 @@
 package com.univeloued.rico.ui.screens.emergency.add
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.univeloued.rico.domain.model.EmergencyContact
 import com.univeloued.rico.domain.usecase.AddEmergencyContactUseCase
-import com.univeloued.rico.domain.util.ValidationResult
+import com.univeloued.rico.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,21 +45,27 @@ class AddEmergencyContactViewModel @Inject constructor(
     private fun saveContact() {
         val state = _uiState.value
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true, error = null) }
-            val contact = EmergencyContact(
-                id = "",
-                name = state.name,
-                phone = state.phone,
-                email = state.email,
-                photoUri = state.photoUri
-            )
-            when (val result = addEmergencyContactUseCase(contact)) {
-                is ValidationResult.Error -> {
-                    _uiState.update { it.copy(isSaving = false, error = result.message) }
+            try {
+                _uiState.update { it.copy(isSaving = true, error = null) }
+                val contact = EmergencyContact(
+                    id = "",
+                    name = state.name,
+                    phone = state.phone,
+                    email = state.email,
+                    photoUri = state.photoUri
+                )
+                val result = addEmergencyContactUseCase(contact)
+                when (result) {
+                    is Resource.Error -> {
+                        _uiState.update { it.copy(isSaving = false, error = result.message) }
+                    }
+                    is Resource.Success -> {
+                        _uiState.update { it.copy(isSaving = false, isSaved = true) }
+                    }
+                    is Resource.Loading -> {}
                 }
-                ValidationResult.Success -> {
-                    _uiState.update { it.copy(isSaving = false, isSaved = true) }
-                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isSaving = false, error = "An unexpected error occurred: ${e.localizedMessage}") }
             }
         }
     }

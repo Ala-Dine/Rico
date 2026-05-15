@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.univeloued.rico.domain.model.Reminder
 import com.univeloued.rico.domain.usecase.AddReminderUseCase
-import com.univeloued.rico.domain.util.ValidationResult
+import com.univeloued.rico.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,12 +61,13 @@ class AddReminderViewModel @Inject constructor(
                 intakeMethod = state.intakeMethod
             )
             when (val result = addReminderUseCase(reminder)) {
-                is ValidationResult.Error -> {
+                is Resource.Error -> {
                     _uiState.update { it.copy(isSaving = false, error = result.message) }
                 }
-                ValidationResult.Success -> {
+                is Resource.Success -> {
                     _uiState.update { it.copy(isSaving = false, isSaved = true) }
                 }
+                is Resource.Loading -> {}
             }
         }
     }

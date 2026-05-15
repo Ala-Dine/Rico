@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.univeloued.rico.ui.components.GenderButton
 import com.univeloued.rico.ui.components.ProfileImageWithAdd
 import com.univeloued.rico.ui.components.RicoTextField
+import com.univeloued.rico.ui.security.LocalSecurityViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,11 +33,19 @@ fun AddFamilyMemberScreen(
     onBack: () -> Unit,
     viewModel: AddFamilyMemberViewModel = hiltViewModel()
 ) {
+    val securityViewModel = LocalSecurityViewModel.current
     val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.isSaved) {
         if (uiState.isSaved) {
             onBack()
+        }
+    }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let {
+            snackbarHostState.showSnackbar(it)
         }
     }
 
@@ -59,17 +68,22 @@ fun AddFamilyMemberScreen(
             uiState.relationship.isNotBlank() &&
             uiState.birthdate.isNotBlank()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF8FCFB))
-    ) {
-        Row(
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = Modifier.fillMaxSize(),
+        containerColor = Color(0xFFF8FCFB)
+    ) { padding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 48.dp, start = 8.dp, end = 16.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(padding)
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp, start = 8.dp, end = 16.dp, bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
             IconButton(onClick = onBack) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color(0xFF102828))
             }
@@ -92,7 +106,10 @@ fun AddFamilyMemberScreen(
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 ProfileImageWithAdd(
                     photoUri = uiState.photoUri,
-                    onClick = { photoPickerLauncher.launch("image/*") }
+                    onClick = { 
+                        securityViewModel.setIgnoreNextStop(true)
+                        photoPickerLauncher.launch("image/*") 
+                    }
                 )
             }
 
@@ -204,6 +221,7 @@ fun AddFamilyMemberScreen(
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+}
 
     // Date Picker Dialog
     if (showDatePicker) {

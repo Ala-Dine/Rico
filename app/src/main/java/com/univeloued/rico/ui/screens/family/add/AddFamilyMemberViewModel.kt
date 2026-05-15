@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.univeloued.rico.domain.model.FamilyMember
 import com.univeloued.rico.domain.usecase.AddFamilyMemberUseCase
+import com.univeloued.rico.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,7 +49,7 @@ class AddFamilyMemberViewModel @Inject constructor(
         if (state.name.isBlank() || state.relationship.isBlank() || state.birthdate.isBlank()) return
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
+            _uiState.update { it.copy(isSaving = true, error = null) }
             val member = FamilyMember(
                 id = "",
                 name = state.name,
@@ -57,8 +58,16 @@ class AddFamilyMemberViewModel @Inject constructor(
                 gender = state.gender,
                 photoUri = state.photoUri
             )
-            addFamilyMemberUseCase(member)
-            _uiState.update { it.copy(isSaving = false, isSaved = true) }
+            val result = addFamilyMemberUseCase(member)
+            when (result) {
+                is Resource.Error -> {
+                    _uiState.update { it.copy(isSaving = false, error = result.message) }
+                }
+                is Resource.Success -> {
+                    _uiState.update { it.copy(isSaving = false, isSaved = true) }
+                }
+                is Resource.Loading -> {}
+            }
         }
     }
 }

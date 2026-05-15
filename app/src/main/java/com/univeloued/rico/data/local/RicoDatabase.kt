@@ -14,7 +14,7 @@ import com.univeloued.rico.data.local.entity.*
         ReminderEntity::class,
         UserProfileEntity::class
     ],
-    version = 2, // Increment version because of entity name changes/structure
+    version = 3, // Added sync fields
     exportSchema = false
 )
 @TypeConverters(Converters::class)

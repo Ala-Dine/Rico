@@ -7,5 +7,6 @@ data class AddFamilyMemberUiState(
     val gender: String = "Male",
     val photoUri: String? = null,
     val isSaving: Boolean = false,
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val error: String? = null
 )

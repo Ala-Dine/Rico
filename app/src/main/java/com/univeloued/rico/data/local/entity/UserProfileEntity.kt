@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "user_profile")
 data class UserProfileEntity(
     @PrimaryKey
-    val id: Int = 0,
+    val id: String = "",
     val name: String = "",
     val birthdate: String = "",
     val gender: String = "",
@@ -16,5 +16,8 @@ data class UserProfileEntity(
     val phone: String = "",
     val email: String = "",
     val notes: String = "",
-    val photoUri: String? = null
+    val photoUri: String? = null,
+    val encryptionSalt: String? = null,
+    val isSynced: Boolean = false,
+    val lastUpdated: Long = System.currentTimeMillis()
 )
