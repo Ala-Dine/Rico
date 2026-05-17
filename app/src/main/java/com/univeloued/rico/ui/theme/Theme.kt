@@ -1,6 +1,5 @@
 package com.univeloued.rico.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,35 +8,40 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+// Dark Theme Layout Palette
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = SeafoamTeal,
+    secondary = SoftMint,
+    tertiary = MutedTeal,
+    background = Color(0xFF121212),      // Dark material surface background
+    surface = Color(0xFF1E1E1E),         // Slightly lighter dark surface for cards
+    onPrimary = Color(0xFF00201A),       // Dark text inside primary elements
+    onSecondary = Color(0xFF002118),     // Dark text inside secondary elements
+    onBackground = LightMint,            // Crisp soft-white/mint text on dark mode
+    onSurface = LightMint
 )
 
+// Light Theme Layout Palette
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
+    primary = DeepTeal,
+    secondary = DarkSage,
+    tertiary = SlateGreen,
+    background = LightMint,              // Uses your ultra-light color as the background canvas
+    surface = Color.White,               // White containers/cards
+    onPrimary = Color.White,             // White text inside deep teal buttons
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    onBackground = Color(0xFF00201A),    // Dark green/black text for legibility
+    onSurface = Color(0xFF00201A)
 )
 
 @Composable
 fun RicoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Set to false to force your custom palette over Android's dynamic engine
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -52,7 +56,7 @@ fun RicoTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = Typography, // Points to your package's Typography.kt file
         content = content
     )
 }
